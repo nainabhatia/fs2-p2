@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>neighbourhood map</title>
+	<link rel="stylesheet" type="text/css" href="css/index.css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+</head>
+<body>
+	<!-- <nav class="navbar navbar-inverse">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#market_list_div">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="#">Delhi Markets</a>
+			</div>
+			<div id="market_list_div" class="navbar-collapse collapse">
+				<ul id="market_list" data-bind="foreach: locationList" class="		nav navbar-nav">
+					<li><a data-bind="text:$data.name, click:$parent.setLocation"></a></li>
+				</ul>
+				<ul>
+					<li><input type="text" name="filter" id="filter_text" placeholder="Enter location" data-bind="textInput:filter_text, event:{keyup: filterMarkers}"></li>
+					<li><input type="button" value="Filter" ></li>
+				</ul>
+			</div>
+		</div>
+		
+	</nav> -->
+
+	<div class="container-fluid main_div">
+	
+			
+	
+		<div class="left_div">
+			<div class="header"><div>Delhi Markets</div><div id="map_error"></div></div>
+			
+			<div class="filter_div">
+				<input type="text" name="filter" id="filter_text" placeholder="Enter location" data-bind="textInput:filter_text, event:{keyup: filterMarkers}">
+				<button><img src="filter_icon.png" height="22px"></button>
+			</div>
+			<ul id="market_list" data-bind="foreach: locationList">
+				<li><a data-bind="text:$data.name, click:$parent.setLocation"></a></li>
+			</ul>
+			<button data-bind="click:showAll">Show all</button>
+		</div>
+		<div class="right_div">
+			<button type="button" class="visible-xs hidden-sm hamburger_icon" data-bind="click:show_list">
+					<img src="menu_icon.png" width="100%">
+				</button>
+			<div id="map"></div>
+		</div>
+	</div>
+	<!-- <div id="map"></div> -->
+	
+
+
+
+	<script  src="js/knockout-3.4.2.js"></script>
+	<script  src="js/app.js"></script>
+
+	<script type="text/javascript">    
+		var map, largeInfowindow;        
+		function initMap(){
+			//map styling
+			var styles = [
+					  {
+					    "elementType": "geometry",
+					    "stylers": [
+					      {
+					        "color": "#f5f5f5"
+					      }
+					    ]
+					  },
+					  {
+					    "elementType": "labels.icon",
+					    "stylers": [
+					      {
+					        "visibility": "off"
+					      }
+					    ]
+					  },
+					  {
+					    "elementType": "labels.text.fill",
+					    "stylers": [
+					      {
+					        "color": "#616161"
+					      }
+					    ]
+					  },
+					  {
+					    "elementType": "labels.text.stroke",
+					    "stylers": [
+					      {
+					        "color": "#f5f5f5"
+					      }
+					    ]
+					  },
+					  {
+					    "featureType": "administrative.land_parcel",
+					    "elementType": "labels.text.fill",
+					    "stylers": [
+					      {
+					        "color": "#bdbdbd"
+					      }
+					    ]
+					  },
+					  {
+					    "featureType": "poi",
+					    "elementType": "geometry",
+					    "stylers": [
+					      {
+					        "color": "#eeeeee"
+					      }
+					    ]
+					  },
+					  {
+					    "featureType": "poi",
+					    "elementType": "labels.text.fill",
+					    "stylers": [
+					      {
+					        "color": "#757575"
+					      }
+					    ]
+					  },
+					  {
+					    "featureType": "poi.park",
+					    "elementType": "geometry",
+					    "stylers": [
+					      {
+					        "color": "#e5e5e5"
+					      }
+					    ]
+					  },
+					  {
+					    "featureType": "poi.park",
+					    "elementType": "labels.text.fill",
+					    "stylers": [
+					      {
+					        "color": "#9e9e9e"
+					      }
+					    ]
+					  },
+					  {
+					    "featureType": "road",
+					    "elementType": "geometry",
+					    "stylers": [
+					      {
+					        "color": "#ffffff"
+					      }
+					    ]
+					  },
+					  {
+					    "featureType": "road.arterial",
+					    "elementType": "labels.text.fill",
+					    "stylers": [
+					      {
+					        "color": "#757575"
+					      }
+					    ]
+					  },
+					  {
+					    "featureType": "road.highway",
+					    "elementType": "geometry",
+					    "stylers": [
+					      {
+					        "color": "#dadada"
+					      }
+					    ]
+					  },
+					  {
+					    "featureType": "road.highway",
+					    "elementType": "labels.text.fill",
+					    "stylers": [
+					      {
+					        "color": "#616161"
+					      }
+					    ]
+					  },
+					  {
+					    "featureType": "road.local",
+					    "elementType": "labels.text.fill",
+					    "stylers": [
+					      {
+					        "color": "#9e9e9e"
+					      }
+					    ]
+					  },
+					  {
+					    "featureType": "transit.line",
+					    "elementType": "geometry",
+					    "stylers": [
+					      {
+					        "color": "#e5e5e5"
+					      }
+					    ]
+					  },
+					  {
+					    "featureType": "transit.station",
+					    "elementType": "geometry",
+					    "stylers": [
+					      {
+					        "color": "#eeeeee"
+					      }
+					    ]
+					  },
+					  {
+					    "featureType": "water",
+					    "elementType": "geometry",
+					    "stylers": [
+					      {
+					        "color": "#c9c9c9"
+					      }
+					    ]
+					  },
+					  {
+					    "featureType": "water",
+					    "elementType": "labels.text.fill",
+					    "stylers": [
+					      {
+					        "color": "#9e9e9e"
+					      }
+					    ]
+					  }
+					]
+			//google map api
+			map = new google.maps.Map(document.getElementById('map'),
+			{
+			    center: {lat: 28.644800, lng: 77.216721},
+			    zoom: 11,
+			    styles:styles,
+			    mapTypeControl:false
+			});
+			largeInfowindow = new google.maps.InfoWindow();
+		
+			//start knockoutjs
+			ko.applyBindings(new ViewModel());
+		}
+		function show_map_error(){
+			$('#map_error').text('error loading map!')
+		}
+		         
+    </script>  
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAA-oyGL432rdeNhprMgu8s9YFl_NWB3j4&callback=initMap" onerror="show_map_error()">
+    </script>   
+</body>
+</html>

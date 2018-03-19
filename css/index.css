@@ -1,0 +1,118 @@
+body{
+	height: 100vh;
+	overflow:hidden;
+}
+.hamburger_icon{
+	position: absolute;
+    background: #e5e5e5;
+    top: 0;
+    left: 0;
+    height: 40px;
+    width: 40px;
+    z-index: 7;
+}
+.hamburger_icon:focus{
+	outline: none;
+}
+.main_div{
+	display: flex;
+	height: 100vh;
+	padding: 0 !important;
+}
+.left_div{
+	min-width: 220px;
+	padding-top: 50px;
+	background-color: #e5e5e5;
+	border-right:solid 1px black;
+}
+@media screen and (max-width: 767px){
+	.left_div{
+		display: none;
+		position: absolute;
+	    top: 0;
+	    left: 0;
+	    z-index: 5;
+	    height: 100vh;
+	}
+}
+@media screen and (min-width: 768px){
+	.left_div{
+		display: block !important;
+	}
+}
+.header{
+	font-size: 20px;
+    padding: 0 10px;
+    color: #5d0404;
+}
+.right_div{
+	width: 100%;
+}
+ul#market_list{
+	list-style: none;
+	list-style-type: none;
+	padding: 0;
+}
+ul#market_list li{
+	padding: 10px 10px;
+}
+ul#market_list li a{
+	font-size: 18px;
+	color:#6f6d6d;
+	cursor: pointer;
+}
+ul#market_list li a:hover{
+	color: #176b03;
+	text-decoration: none;
+}
+.filter_div{
+	display: grid;
+	padding: 10px;
+	grid-template-columns: auto 35px;
+}
+.filter_div input{
+	font-size: 18px;
+    width: 100%;
+    padding: 5px 0;
+}
+
+.filter_div button{
+	background-color: transparent;
+	border:none;
+}
+.marker_title{
+	font-size: 18px;
+	padding: 10px 0;
+}
+#map{
+	height: 100vh;
+	background-color: #f9f9f9;
+	height: 100%;
+}
+#wiki_links{
+	max-height: 70px;
+	overflow: scroll;
+}
+.info_content{
+	max-height: 250px;
+	overflow: scroll;
+}
+#wiki_links li a{
+	font-size: 16px;
+	color: black;
+}
+#wiki_links{
+	list-style: none;
+	list-style-type: none;
+}
+.wiki_header{
+	font-size: 16px;
+	color: red;
+	padding-bottom: 5px;
+}
+#pano {
+        width: 40vw;
+        max-width: 200px;
+        max-height: 200px;
+        height: 40vw;
+      }
