@@ -36,15 +36,13 @@ var addLocation = function(data){
 	this.name = data.name;
 	this.location = data.location;
 };
-
 //viewmodel for knockout js
 var ViewModel = function(){
 	var self = this;
-
 	this.filter_text = ko.observable('');
 	this.show_list = function(){
 		$('.left_div').toggle();
-	}
+	};
 	this.locationList = ko.observableArray([]);
 	locations.forEach(function(place){
 		self.locationList.push(new addLocation(place));
@@ -58,7 +56,7 @@ var ViewModel = function(){
 	 		}
 	 		else
 	 		{
-	 			marker.setMap(null)
+	 			marker.setMap(null);
 	 		}
 	 	});
 	 	self.locationList([]);
@@ -67,21 +65,20 @@ var ViewModel = function(){
 	 		if(location_name.search(filter_field)!== -1){
 	 			self.locationList.push(new addLocation(place));
 	 		}
-	 	})
-	 }
+	 	});
+	 };
 	 this.showAll = function(){
 	 	self.markers.forEach(function(marker){
-	 		marker.setMap(map)
-	 		self.locationList([])
-	 		self.filter_text('')
+	 		marker.setMap(map);
+	 		self.locationList([]);
+	 		self.filter_text('');
 	 		locations.forEach(function(place){
-	 			self.locationList.push(new addLocation(place))
-	 		})
-	 	})
-	 }
+	 			self.locationList.push(new addLocation(place));
+	 		});
+	 	});
+	 };
 	 this.setLocation = function(){
-	 	
-	 	var that= this
+	 	var that= this;
 	 	//locations not filtered on the list so that they can still be shown in the side menu
 	 	//if needed following code would be run
 
@@ -91,24 +88,33 @@ var ViewModel = function(){
 	 	// 		self.locationList.push(place)
 	 	// 	}
 	 	// })
-
 	 	//markers set to null if not matched with location selection
 	 	self.markers.forEach(function(marker){
 	 		if(marker.title === that.name){
-	 			marker.setMap(map)
-	 			populateInfoWindow(marker,largeInfowindow)
+	 			marker.setMap(map);
+	 			populateInfoWindow(marker,largeInfowindow);
 	 		}
 	 		else{
-	 			marker.setMap(null)
+	 			marker.setMap(null);
 	 		}
-	 	})
-	 }
+	 	});
+	 };
 
 	self.markers = [];
 	self.locationList().forEach(function(marker){
 		var marker_location = marker.location;
 		var marker_name = marker.name;
-
+		var makeMarkerIcon = function(icon_name){
+			var marker_image = new google.maps.MarkerImage(
+				// 'http://chart.googleapis.com/chart?chst=d_map_spin&child=1.15|0|' + m_color +
+				// '|40|_|%E2%80%A2',
+				icon_name,
+				new google.maps.Size(25,27),
+				new google.maps.Point(0,0),
+				new google.maps.Point(10,34),
+				new google.maps.Size(25,27));
+			return marker_image;
+		};
 		//default and highligted icon for markers
 		var default_icon = makeMarkerIcon('green_icon.png');
 		var hover_icon = makeMarkerIcon('pink_icon.png');
@@ -121,34 +127,20 @@ var ViewModel = function(){
 			animation:google.maps.Animation.DROP,
 		});
 		self.markers.push(new_marker);
-		function makeMarkerIcon(icon_name){
-			var marker_image = new google.maps.MarkerImage(
-				// 'http://chart.googleapis.com/chart?chst=d_map_spin&child=1.15|0|' + m_color +
-				// '|40|_|%E2%80%A2',
-				icon_name,
-				new google.maps.Size(25,27),
-				new google.maps.Point(0,0),
-				new google.maps.Point(10,34),
-				new google.maps.Size(25,27));
-			return marker_image;
-		}
-
 		//event listeners on markers
 		new_marker.addListener('click',function(){
-			populateInfoWindow(this,largeInfowindow)
-		})
+			populateInfoWindow(this,largeInfowindow);
+		});
 		new_marker.addListener('mouseover',function(){
 			this.setIcon(hover_icon);
 		});
 		new_marker.addListener('mouseout',function(){
 			this.setIcon(default_icon);
 		});
-	
 	});
 	
 	//content to be shown in info window
-	function populateInfoWindow(marker,infowindow){
-
+	var populateInfoWindow = function(marker,infowindow){
 		// Check to make sure the infowindow is not already opened on this marker.
         if (infowindow.marker != marker) {
           // Clear the infowindow content to give the streetview time to load.
@@ -158,25 +150,19 @@ var ViewModel = function(){
           infowindow.addListener('closeclick', function() {
             infowindow.marker = null;
           });
-
-
           var streetViewService = new google.maps.StreetViewService();
           var radius = 50;
           // In case the status is OK, which means the pano was found, compute the
           // position of the streetview image, then calculate the heading, then get a
           // panorama from that and set the options
-          function getStreetView_wikilinks(data, status) {
-
+          var getStreetView_wikilinks = function(data, status) {
             infowindow.setContent('<div class="info_content"><div class="marker_title">' + marker.title + '</div><div><div class="wiki_header">Wikipedia Links</div><div id="wiki_links"></div></div><div id="pano"></div></div>');
-
-
           	var wiki_url = 'http://en.wikipedia.org/w/api.php?action=opensearch&search='+ marker.title + '&format=json&callback=wikiCallback';
 	    	var $wikiElem = $('#wiki_links');
 	    	var $pano = $('#pano');
-
 		    var wiki_request_timeout = setTimeout(function(){
 		        //infowindow.setContent('<div><div class="wiki_header">Wikipedia Links</div><div id="wiki_links">Failed to load wikipedialinks</div></div>')
-		        $wikiElem.append('Failed to load wikipedia links')
+		        $wikiElem.append('Failed to load wikipedia links');
 		    },8000);
 		    //ajax call for wikipedia links (non google third party api)
 		    $.ajax({
@@ -184,15 +170,12 @@ var ViewModel = function(){
 		        dataType:'jsonp',
 		        success: function(response){
 		        	//infowindow.setContent('<div><div class="wiki_header">Wikipedia Links</div><div id="wiki_links"></div></div>')
-		        	
 		            var articleList = response[1];
 		            for(var i = 0 ; i <articleList.length; i++){
 		                article_str = articleList[i];
 		                var url = 'http://en.wikipedia.org/wiki/' + article_str;
 		                $wikiElem.append('<li><a href="' + url + '">' + article_str + '</a></li>');
-
-		            };
-
+		            }
 		            clearTimeout(wiki_request_timeout);
 		        }
 		    });
@@ -214,24 +197,16 @@ var ViewModel = function(){
             } else {
               //infowindow.setContent('<div class="marker_title">' + marker.title + '</div>' +
                // '<div><div class="wiki_header">Wikipedia Links</div><div id="wiki_links"></div><div>No Street View Found</div>');
-               $pano.append('<div>No street view found</div>')
-
+               $pano.append('<div>No street view found</div>');
             }
-          }
+          };
           // Use streetview service to get the closest streetview image within
           // 50 meters of the markers position
-
           	streetViewService.getPanoramaByLocation(marker.position, radius, getStreetView_wikilinks);
-          
           	// Open the infowindow on the correct marker.
 	          infowindow.open(map, marker);
-	        }
-
-		
-	}
-
-
-
-}
+	        }	
+	};
+};
 
 //ko.applyBindings(new ViewModel());
