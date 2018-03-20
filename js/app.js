@@ -89,20 +89,19 @@ var ViewModel = function(){
 	 	//markers set to null if not matched with location selection
 	 	self.markers.forEach(function(marker){
 	 		if(marker.title === that.name){
-	 			marker.setMap(map);
-	 			populateInfoWindow(marker,largeInfowindow);
+	 			//marker.setMap(map);
+	 			marker.setIcon(hover_icon)
+	 			marker.setAnimation(google.maps.Animation.BOUNCE);
+				populateInfoWindow(marker,largeInfowindow);
+				setTimeout(marker.setAnimation(null),1000000);
 	 		}
 	 		else{
-	 			marker.setMap(null);
+	 			//marker.setMap(null);
+	 			marker.setIcon(default_icon)
 	 		}
 	 	});
 	 };
-
-	self.markers = [];
-	self.locationList().forEach(function(marker){
-		var marker_location = marker.location;
-		var marker_name = marker.name;
-		var makeMarkerIcon = function(icon_name){
+	 var makeMarkerIcon = function(icon_name){
 			var marker_image = new google.maps.MarkerImage(
 				// 'http://chart.googleapis.com/chart?chst=d_map_spin&child=1.15|0|' + m_color +
 				// '|40|_|%E2%80%A2',
@@ -116,6 +115,12 @@ var ViewModel = function(){
 		//default and highligted icon for markers
 		var default_icon = makeMarkerIcon('green_icon.png');
 		var hover_icon = makeMarkerIcon('pink_icon.png');
+
+	self.markers = [];
+	self.locationList().forEach(function(marker){
+		var marker_location = marker.location;
+		var marker_name = marker.name;
+		
 		//ceate marker
 		var new_marker = new google.maps.Marker({
 			map:map,
