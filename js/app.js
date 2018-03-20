@@ -1,4 +1,3 @@
-
 //initial locations
 var locations = [
 	{
@@ -54,8 +53,7 @@ var ViewModel = function(){
 	 		if(marker_name.search(filter_field)!== -1){
 	 			marker.setMap(map);
 	 		}
-	 		else
-	 		{
+	 		else {
 	 			marker.setMap(null);
 	 		}
 	 	});
@@ -129,7 +127,10 @@ var ViewModel = function(){
 		self.markers.push(new_marker);
 		//event listeners on markers
 		new_marker.addListener('click',function(){
+			this.setAnimation(google.maps.Animation.BOUNCE);
 			populateInfoWindow(this,largeInfowindow);
+			setTimeout(this.setAnimation(null),100000);
+
 		});
 		new_marker.addListener('mouseover',function(){
 			this.setIcon(hover_icon);
@@ -160,25 +161,28 @@ var ViewModel = function(){
           	var wiki_url = 'http://en.wikipedia.org/w/api.php?action=opensearch&search='+ marker.title + '&format=json&callback=wikiCallback';
 	    	var $wikiElem = $('#wiki_links');
 	    	var $pano = $('#pano');
-		    var wiki_request_timeout = setTimeout(function(){
-		        //infowindow.setContent('<div><div class="wiki_header">Wikipedia Links</div><div id="wiki_links">Failed to load wikipedialinks</div></div>')
-		        $wikiElem.append('Failed to load wikipedia links');
-		    },8000);
 		    //ajax call for wikipedia links (non google third party api)
 		    $.ajax({
 		        url:wiki_url,
-		        dataType:'jsonp',
-		        success: function(response){
+		        dataType:'jsonp'
+		    }).done(function(response){
 		        	//infowindow.setContent('<div><div class="wiki_header">Wikipedia Links</div><div id="wiki_links"></div></div>')
 		            var articleList = response[1];
+		            //console.log(response)
+		        	if(articleList.length === 0){
+		        		$wikiElem.append('<p>No wikipedia links found.</p>');
+		        	}
+		        	else{
 		            for(var i = 0 ; i <articleList.length; i++){
 		                article_str = articleList[i];
 		                var url = 'http://en.wikipedia.org/wiki/' + article_str;
 		                $wikiElem.append('<li><a href="' + url + '">' + article_str + '</a></li>');
 		            }
-		            clearTimeout(wiki_request_timeout);
 		        }
-		    });
+		        }).fail(function(){
+		        	//console.log('fail wiki')
+		        	$wikiElem.append('<p>Failed to load wikipedia links</p>');
+		        });
 		    //street view api response for google
             if (status == google.maps.StreetViewStatus.OK) {
               var nearStreetViewLocation = data.location.latLng;

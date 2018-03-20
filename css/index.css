@@ -68,6 +68,8 @@ ul#market_list li a:hover{
 .filter_div{
 	display: grid;
 	padding: 10px;
+	justify-content: center;
+	align-items: center;
 	grid-template-columns: auto 35px;
 }
 .filter_div input{

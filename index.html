@@ -41,8 +41,12 @@
 			<div class="header"><div>Delhi Markets</div><div id="map_error"></div></div>
 			
 			<div class="filter_div">
+				<div>
 				<input type="text" name="filter" id="filter_text" placeholder="Enter location" data-bind="textInput:filter_text, event:{keyup: filterMarkers}">
+			</div>
+			<div>
 				<button><img src="filter_icon.png" height="22px"></button>
+			</div>
 			</div>
 			<ul id="market_list" data-bind="foreach: locationList">
 				<li><a data-bind="text:$data.name, click:$parent.setLocation"></a></li>
