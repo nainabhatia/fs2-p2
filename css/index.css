@@ -68,8 +68,6 @@ ul#market_list li a:hover{
 .filter_div{
 	display: grid;
 	padding: 10px;
-	justify-content: center;
-	align-items: center;
 	grid-template-columns: auto 35px;
 }
 .filter_div input{
@@ -92,7 +90,7 @@ ul#market_list li a:hover{
 	height: 100%;
 }
 #wiki_links{
-	max-height: 70px;
+	//max-height: 70px;
 	overflow: scroll;
 }
 .info_content{
@@ -113,8 +111,30 @@ ul#market_list li a:hover{
 	padding-bottom: 5px;
 }
 #pano {
+	display: none;
         width: 40vw;
         max-width: 200px;
         max-height: 200px;
         height: 40vw;
       }
+
+.info_bg{
+	position: absolute;
+    top:10%;
+    right:10%;
+    background-color: rgba(0,0,0,0.2);
+    display: flex;
+
+}
+#info_div{
+	padding: 20px;
+	max-width: 600px;
+    height: auto;
+    min-width: 300px;
+    margin: auto;
+    background-color: white;
+}
+.close_info{
+	float: right;
+	cursor: pointer;
+}
